@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtube-summarizer
+  namespace: youtube-summarizer
+  labels:
+    app: youtube-summarizer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: youtube-summarizer
+  template:
+    metadata:
+      labels:
+        app: youtube-summarizer
+    spec:
+      containers:
+      - name: youtube-summarizer
+        image: suparious/youtube-summarizer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
+          name: http
+        env:
+        # vLLM endpoint for AI inference
+        - name: VLLM_ENDPOINT
+          value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+        # OpenAI API key will be used for vLLM (OpenAI-compatible API)
+        - name: OPENAI_API_KEY
+          value: "not-needed-for-vllm"
+        - name: OPENAI_CHATGPT_API_KEY
+          value: "not-needed-for-vllm"
+        # Base URL for OpenAI client to point to vLLM
+        - name: OPENAI_BASE_URL
+          value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3

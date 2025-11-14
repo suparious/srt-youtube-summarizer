@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-summarizer
+  namespace: youtube-summarizer
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-dns01"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - youtube-summarizer.lab.hq.solidrust.net
+    secretName: youtube-summarizer-tls
+  rules:
+  - host: youtube-summarizer.lab.hq.solidrust.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-summarizer
+            port:
+              number: 8501
