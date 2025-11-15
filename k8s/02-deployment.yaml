@@ -25,7 +25,7 @@ spec:
         env:
         # vLLM endpoint for AI inference
         - name: VLLM_ENDPOINT
-          value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+          value: "http://vllm.inference.svc.cluster.local:8000/v1"
         # OpenAI API key will be used for vLLM (OpenAI-compatible API)
         - name: OPENAI_API_KEY
           value: "not-needed-for-vllm"
@@ -33,7 +33,7 @@ spec:
           value: "not-needed-for-vllm"
         # Base URL for OpenAI client to point to vLLM
         - name: OPENAI_BASE_URL
-          value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+          value: "http://vllm.inference.svc.cluster.local:8000/v1"
         resources:
           requests:
             cpu: 200m

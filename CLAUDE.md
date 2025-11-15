@@ -117,7 +117,7 @@ The app is deployed on the SRT-HQ Kubernetes platform and integrates with:
 - **Ingress**: nginx-ingress with Let's Encrypt DNS-01
 
 ### AI Inference
-- **vLLM Service**: `http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1`
+- **vLLM Service**: `http://vllm.inference.svc.cluster.local:8000/v1`
 - **API Compatibility**: OpenAI-compatible endpoints
 - **Models**: Platform-hosted LLMs (see vLLM deployment for model list)
 
@@ -270,7 +270,7 @@ kubectl get pods -n youtube-summarizer
 kubectl describe pod -n youtube-summarizer <pod-name>
 
 # Check vLLM connectivity
-kubectl exec -it -n youtube-summarizer <pod-name> -- curl http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1/models
+kubectl exec -it -n youtube-summarizer <pod-name> -- curl http://vllm.inference.svc.cluster.local:8000/v1/models
 
 # Check certificate status
 kubectl describe certificate -n youtube-summarizer youtube-summarizer-tls
@@ -335,7 +335,7 @@ kubectl describe ingress -n youtube-summarizer youtube-summarizer
 - Redirects HTTP → HTTPS automatically
 
 **vLLM Integration**:
-- Endpoint: `http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1`
+- Endpoint: `http://vllm.inference.svc.cluster.local:8000/v1`
 - Compatibility: OpenAI API format
 - Authentication: None required (internal cluster service)
 
@@ -366,9 +366,9 @@ kubectl describe ingress -n youtube-summarizer youtube-summarizer
 ```yaml
 env:
 - name: VLLM_ENDPOINT
-  value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+  value: "http://vllm.inference.svc.cluster.local:8000/v1"
 - name: OPENAI_BASE_URL
-  value: "http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1"
+  value: "http://vllm.inference.svc.cluster.local:8000/v1"
 - name: OPENAI_API_KEY
   value: "not-needed-for-vllm"
 ```
@@ -423,7 +423,7 @@ curl -k https://youtube-summarizer.lab.hq.solidrust.net
 
 # 7. Test vLLM connectivity
 kubectl exec -it -n youtube-summarizer <pod-name> -- \
-  curl http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1/models
+  curl http://vllm.inference.svc.cluster.local:8000/v1/models
 # Expected: JSON response with model list
 ```
 

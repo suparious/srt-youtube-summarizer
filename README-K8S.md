@@ -91,7 +91,7 @@ kubectl describe pod -n youtube-summarizer <pod-name>
 
 # Check vLLM connectivity
 kubectl exec -it -n youtube-summarizer <pod-name> -- \
-  curl http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1/models
+  curl http://vllm.inference.svc.cluster.local:8000/v1/models
 
 # Check certificate
 kubectl describe certificate -n youtube-summarizer youtube-summarizer-tls
@@ -123,7 +123,7 @@ kubectl describe ingress -n youtube-summarizer youtube-summarizer
 - **Certificate**: Automatic via cert-manager (DNS-01)
 
 **vLLM Integration**:
-- **Endpoint**: `http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1`
+- **Endpoint**: `http://vllm.inference.svc.cluster.local:8000/v1`
 - **API Format**: OpenAI-compatible
 - **Authentication**: None (internal cluster service)
 - **Cost**: $0 per token (local inference)
@@ -179,7 +179,7 @@ kubectl port-forward -n youtube-summarizer deployment/youtube-summarizer 8501:85
 
 # Test vLLM endpoint from pod
 kubectl exec -it -n youtube-summarizer <pod-name> -- \
-  curl http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1/models
+  curl http://vllm.inference.svc.cluster.local:8000/v1/models
 
 # Uninstall
 .\deploy.ps1 -Uninstall
@@ -191,8 +191,8 @@ kubectl exec -it -n youtube-summarizer <pod-name> -- \
 
 **Production (K8s deployment)**:
 ```yaml
-VLLM_ENDPOINT: http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1
-OPENAI_BASE_URL: http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1
+VLLM_ENDPOINT: http://vllm.inference.svc.cluster.local:8000/v1
+OPENAI_BASE_URL: http://vllm.inference.svc.cluster.local:8000/v1
 OPENAI_API_KEY: not-needed-for-vllm
 ```
 
@@ -211,7 +211,7 @@ GOOGLE_GEMINI_API_KEY=your-gemini-key-here
 - **Docker Hub**: https://hub.docker.com/r/suparious/youtube-summarizer
 - **GitHub**: https://github.com/suparious/srt-youtube-summarizer
 - **Platform**: https://github.com/SolidRusT/srt-hq-k8s
-- **vLLM Service**: `http://vllm-inference.vllm-inference.svc.cluster.local:8000/v1`
+- **vLLM Service**: `http://vllm.inference.svc.cluster.local:8000/v1`
 
 ---
 
