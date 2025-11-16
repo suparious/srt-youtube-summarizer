@@ -6,12 +6,6 @@
 .DESCRIPTION
     Builds the YouTube Summarizer Streamlit application Docker image and optionally pushes to GitHub Container Registry
 
-.PARAMETER GitHub Container RegistryUsername
-    GitHub Container Registry username (default: suparious)
-
-.PARAMETER ImageName
-    Docker image name (default: youtube-summarizer)
-
 .PARAMETER Tag
     Docker image tag (default: latest)
 
@@ -32,25 +26,23 @@
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $false)]
-    [string]$GitHub Container RegistryUsername = "suparious",
+    [Parameter()]
+    [switch]$Login,
 
-    [Parameter(Mandatory = $false)]
-    [string]$ImageName = "youtube-summarizer",
-
-    [Parameter(Mandatory = $false)]
-    [string]$Tag = "latest",
-
-    [Parameter(Mandatory = $false)]
+    [Parameter()]
     [switch]$Push,
 
-    [Parameter(Mandatory = $false)]
-    [switch]$Login
+    [Parameter()]
+    [string]$Tag = "latest"
 )
 
 $ErrorActionPreference = 'Stop'
 
 #region Configuration
+
+# Docker configuration
+$DockerRegistry = "ghcr.io/suparious"
+$ImageName = "youtube-summarizer"
 
 # Color formatting
 $colors = @{
@@ -83,7 +75,7 @@ Write-ColorOutput "`n=== YouTube Summarizer - Docker Image Builder ===" $colors.
 Write-ColorOutput "Building Docker image for Streamlit application`n" $colors.Info
 
 # Determine full image name
-$fullImageName = "${GitHub Container RegistryUsername}/${ImageName}:${Tag}"
+$fullImageName = "${DockerRegistry}/${ImageName}:${Tag}"
 
 Write-ColorOutput "Target image: $fullImageName" $colors.Info
 Write-Host ""
@@ -197,7 +189,7 @@ Write-ColorOutput "Image: $fullImageName" $colors.Info
 Write-ColorOutput "Status: Built successfully" $colors.Success
 if ($Push) {
     Write-ColorOutput "Published: Yes" $colors.Success
-    Write-ColorOutput "Public URL: https://hub.docker.com/r/$GitHub Container RegistryUsername/$ImageName" $colors.Info
+    Write-ColorOutput "Registry: ${DockerRegistry}/${ImageName}" $colors.Info
 }
 else {
     Write-ColorOutput "Published: No (local only)" $colors.Warning
@@ -217,8 +209,8 @@ if (-not $Push) {
 }
 
 if ($Push) {
-    Write-ColorOutput "🎉 Image is now publicly available!" $colors.Success
-    Write-Host "   https://hub.docker.com/r/$GitHub Container RegistryUsername/$ImageName" -ForegroundColor Green
+    Write-ColorOutput "🎉 Image pushed to GitHub Container Registry!" $colors.Success
+    Write-Host "   ${DockerRegistry}/${ImageName}:${Tag}" -ForegroundColor Green
     Write-Host ""
     Write-ColorOutput "Deploy to Kubernetes:" $colors.Header
     Write-Host "   .\deploy.ps1" -ForegroundColor Cyan
