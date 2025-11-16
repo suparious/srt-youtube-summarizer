@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: youtube-summarizer
-        image: suparious/youtube-summarizer:latest
+        image: ghcr.io/suparious/youtube-summarizer:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8501
